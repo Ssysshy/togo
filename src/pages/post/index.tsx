@@ -45,8 +45,8 @@ export default function PostPage() {
       })
       showToast({ title: '发布成功', icon: 'success' })
       setTimeout(() => navigateBack(), 1500)
-    } catch (e) {
-      showToast({ title: e.message || '发布失败', icon: 'none' })
+    } catch (e: unknown) {
+      showToast({ title: (e as Error).message || '发布失败', icon: 'none' })
     } finally {
       setLoading(false)
     }

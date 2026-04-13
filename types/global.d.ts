@@ -1,5 +1,16 @@
 /// <reference types="@tarojs/taro" />
 
+declare namespace wx {
+  function getStorageSync(key: string): any
+  function setStorageSync(key: string, value: any): void
+  function removeStorageSync(key: string): void
+  function getLocation(options: {
+    type: string
+    success: (res: { latitude: number; longitude: number }) => void
+    fail: (err: any) => void
+  }): void
+}
+
 declare module '*.png';
 declare module '*.gif';
 declare module '*.jpg';

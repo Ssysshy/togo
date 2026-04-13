@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { View, Text, Input, Button } from '@tarojs/components'
-import { navigateTo } from '@tarojs/taro'
+import Taro, { navigateTo } from '@tarojs/taro'
 import { login as loginService } from '../../services/auth'
 import './index.less'
 
@@ -19,9 +19,9 @@ export default function Login() {
     setError('')
     try {
       await loginService(username, password)
-      navigateTo({ url: '/pages/map/index' })
-    } catch (e) {
-      setError(e.message || '登录失败')
+      Taro.reLaunch({ url: '/pages/map/index' })
+    } catch (e: unknown) {
+      setError((e as Error).message || '登录失败')
     } finally {
       setLoading(false)
     }

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
-import Taro from '@tarojs/taro'
+import Taro, { navigateTo, navigateBack, showToast } from '@tarojs/taro'
 import { View, Text, Button } from '@tarojs/components'
-import { navigateTo, navigateBack, showToast } from '@tarojs/taro'
 import { getCurrentUser } from '../../services/auth'
 import { getPostById, joinPost } from '../../services/post'
 import { Post } from '../../types'
@@ -17,7 +16,7 @@ export default function PostDetailPage() {
     const postId = query?.id
     if (!postId) {
       showToast({ title: '帖子不存在', icon: 'none' })
-      navigateBack()
+      setTimeout(() => navigateBack(), 1500)
       return
     }
 
@@ -26,7 +25,7 @@ export default function PostDetailPage() {
       setLoading(false)
       if (!p) {
         showToast({ title: '帖子不存在', icon: 'none' })
-        navigateBack()
+        setTimeout(() => navigateBack(), 1500)
       }
     })
   }, [])
@@ -52,8 +51,8 @@ export default function PostDetailPage() {
       setPost(updatedPost)
       showToast({ title: '加入成功', icon: 'success' })
       setTimeout(() => navigateBack(), 1500)
-    } catch (e) {
-      showToast({ title: e.message || '加入失败', icon: 'none' })
+    } catch (e: unknown) {
+      showToast({ title: (e as Error).message || '加入失败', icon: 'none' })
     } finally {
       setJoining(false)
     }

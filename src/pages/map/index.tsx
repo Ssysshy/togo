@@ -1,23 +1,13 @@
 import { useState, useEffect } from 'react'
 import { View, Text, Map, Button } from '@tarojs/components'
-import { navigateTo, pullDownRefresh } from '@tarojs/taro'
+import type { MapProps } from '@tarojs/components/types/Map'
+import Taro, { navigateTo } from '@tarojs/taro'
 import { getCurrentUser } from '../../services/auth'
 import { getPosts, getUserLocation } from '../../services/post'
 import { Post, Location } from '../../types'
 import './index.less'
 
-interface Marker {
-  id: string
-  latitude: number
-  longitude: number
-  title: string
-  callout: {
-    content: string
-    padding: 8
-    borderRadius: 4
-    display: 'ALWAYS'
-  }
-}
+type Marker = MapProps.marker
 
 export default function MapPage() {
   const [location, setLocation] = useState<Location>({
@@ -37,16 +27,27 @@ export default function MapPage() {
 
       // Get posts
       const posts = await getPosts()
-      const markersData: Marker[] = posts.map((post: Post) => ({
-        id: post.id,
+      const markersData: Marker[] = posts.map((post: Post, index: number) => ({
+        id: index,
         latitude: post.location.latitude,
         longitude: post.location.longitude,
         title: post.title,
+        iconPath: '',
+        width: 20,
+        height: 20,
         callout: {
           content: `${post.title}\n${post.currentParticipants.length}/${post.maxParticipants}人`,
-          padding: 8,
+          color: '#333',
+          fontSize: 14,
+          anchorX: 0,
+          anchorY: 0,
           borderRadius: 4,
-          display: 'ALWAYS'
+          borderWidth: 0,
+          borderColor: '#fff',
+          bgColor: '#fff',
+          padding: 8,
+          display: 'ALWAYS',
+          textAlign: 'center'
         }
       }))
       setMarkers(markersData)
@@ -79,7 +80,7 @@ export default function MapPage() {
 
   const handleRefresh = async () => {
     await loadData()
-    pullDownRefresh?.()
+    Taro.stopPullDownRefresh()
   }
 
   return (
@@ -92,7 +93,8 @@ export default function MapPage() {
         markers={markers}
         showLocation
         onMarkerTap={handleMarkerTap}
-        onClick={handleRefresh}
+        onTap={handleRefresh}
+        onError={() => {}}
       />
 
       {loading && (

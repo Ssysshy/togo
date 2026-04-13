@@ -1,4 +1,5 @@
 import { User } from '../types'
+import { getItem, setItem, removeItem } from '../utils/storage'
 
 const STORAGE_KEY = 'togo_user'
 
@@ -15,11 +16,7 @@ export function login(username: string, password: string): Promise<User> {
           nickname: username
         }
         currentUser = user
-        try {
-          wx.setStorageSync(STORAGE_KEY, user)
-        } catch (e) {
-          // ignore storage errors in h5
-        }
+        setItem(STORAGE_KEY, user)
         resolve(user)
       } else {
         reject(new Error('请输入用户名和密码'))
@@ -30,23 +27,15 @@ export function login(username: string, password: string): Promise<User> {
 
 export function getCurrentUser(): User | null {
   if (currentUser) return currentUser
-  try {
-    const stored = wx.getStorageSync(STORAGE_KEY)
-    if (stored) {
-      currentUser = stored
-      return currentUser
-    }
-  } catch (e) {
-    // ignore
+  const stored = getItem<User>(STORAGE_KEY)
+  if (stored) {
+    currentUser = stored
+    return currentUser
   }
   return null
 }
 
 export function logout(): void {
   currentUser = null
-  try {
-    wx.removeStorageSync(STORAGE_KEY)
-  } catch (e) {
-    // ignore
-  }
+  removeItem(STORAGE_KEY)
 }

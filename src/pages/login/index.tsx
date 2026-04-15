@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { View, Text, Input, Button } from '@tarojs/components'
-import Taro, { navigateTo } from '@tarojs/taro'
+import Taro from '@tarojs/taro'
 import { login as loginService } from '../../services/auth'
 import './index.less'
 

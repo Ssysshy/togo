@@ -33,6 +33,11 @@ export default function PostPage() {
       return
     }
 
+    if (!location.latitude || !location.longitude) {
+      showToast({ title: '正在获取位置，请稍候', icon: 'none' })
+      return
+    }
+
     setLoading(true)
     try {
       await createPost({

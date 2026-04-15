@@ -10,7 +10,13 @@ export function getItem<T>(key: string): T | null {
   }
   if (ENV === 'h5') {
     const value = localStorage.getItem(key)
-    return value ? JSON.parse(value) : null
+    if (!value) return null
+    try {
+      return JSON.parse(value)
+    } catch {
+      removeItem(key)
+      return null
+    }
   }
   return null
 }

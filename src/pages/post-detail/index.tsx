@@ -50,7 +50,6 @@ export default function PostDetailPage() {
       const updatedPost = await joinPost(post.id, user.id)
       setPost(updatedPost)
       showToast({ title: '加入成功', icon: 'success' })
-      setTimeout(() => navigateBack(), 1500)
     } catch (e: unknown) {
       showToast({ title: (e as Error).message || '加入失败', icon: 'none' })
     } finally {
